@@ -1,0 +1,37 @@
+@ -0,0 +1,36 @@
+# Temporäre BlueJ-Dateien
+*.class
+*.ctxt
+**/doc/**.css
+**/doc/*.html
+**/doc/**.js
+**/doc/*.zip
+**/doc/copy.svg
+**/doc/element-list
+**/doc/jquery
+**/doc/legal
+**/doc/link.svg
+**/doc/logfile.txt
+**/doc/package-list
+**/doc/resources
+**/doc/script-dir
+**/doc/stylesheet.css
+
+# Temporäre TeX-Dateien
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+
+#Mac Dateien
+.DS_Store
+
+# Versteckte Dateien (aber .gitignore behalten)
+.*
+!.gitignore
