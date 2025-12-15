@@ -20,24 +20,44 @@ public class RandomNumber
         Scanner scanner = new Scanner(System.in);
         
         int min = 1;
-        int max = 1000;
+        int max = 100;
         
         int guessedNumber = randomGuess(min, max);
-        int playerGuess;
+        int playerGuess = min;
         int attempts = 0;
         
         boolean correctGuess = false;
         
+        
+        System.out.println("Gib eine Zahl zwischen " + min + " und " + max + " ein: ");
         while (!correctGuess) {
-            System.out.println("Gib eine Zahl zwischen " + min + " und " + max + " ein: ");
-            playerGuess = scanner.nextInt();
+            boolean validInput = false;
+            
+            while(!validInput) {
+                if (scanner.hasNextInt()) {
+                    playerGuess = scanner.nextInt();
+                    
+                    if (playerGuess < min || playerGuess > max) {
+                        System.out.println("Zahl außerhalb des Bereiches.");
+                        System.out.println("Gib eine Zahl, innerhalb des Bereiches ein: ");
+                    }
+                    else {
+                        validInput = true;
+                    }
+                }
+                else {
+                    System.out.println("Bitte eine Zahl eingeben!");
+                    scanner.nextLine();
+                }
+            }
+            
             attempts ++;
             
             if (playerGuess < guessedNumber) {
-                System.out.println("Zu klein");
+                System.out.println("Zu klein, gib eine größere Zahl ein: ");
             }
             else if (playerGuess > guessedNumber) {
-                System.out.println("Zu groß");
+                System.out.println("Zu groß, gib eine kleinere Zahl ein: ");
             }
             
             else if (playerGuess == guessedNumber) {
