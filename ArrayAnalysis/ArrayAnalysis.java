@@ -1,6 +1,15 @@
 public class ArrayAnalysis 
 {
-    private static String giveValues(int[] arrayValues) 
+    // Attribute
+    int[] arrayValues;
+    
+    // Konstruktor
+    ArrayAnalysis(int[] arrayValues)
+    {
+        this.arrayValues = arrayValues;        
+    }
+    
+    private String giveValues() 
     {
         String result = "Alle Werte im Array: ";
         
@@ -10,7 +19,7 @@ public class ArrayAnalysis
         return result;
     }
     
-    private static int calculateSum(int[] arrayValues) 
+    private int calculateSum() 
     {
         int result = 0;
         
@@ -20,14 +29,14 @@ public class ArrayAnalysis
         return result;
     }
     
-    private static double calculateAverage(int[] arrayValues) 
+    private double calculateAverage() 
     {
-        double average = (double) calculateSum(arrayValues) / arrayValues.length;
+        double average = (double) calculateSum() / arrayValues.length;
         
         return average;
     }
     
-    private static int findMaximum(int[] arrayValues) 
+    private int findMaximum() 
     {
         int maxValue = arrayValues[0];
         
@@ -39,7 +48,7 @@ public class ArrayAnalysis
         return maxValue;
     }
     
-    private static int findMinimum(int[] arrayValues) 
+    private int findMinimum() 
     {
         int minValue = arrayValues[0];
         
@@ -55,20 +64,12 @@ public class ArrayAnalysis
     {
         int[] arrayValues = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         
-        String result = giveValues(arrayValues);
-        System.out.println(result);
+        ArrayAnalysis analysis = new ArrayAnalysis(arrayValues);
         
-        int sum = calculateSum(arrayValues);
-        System.out.println("Die Summe aller Werte ist: " + sum);
-        
-        double avg = calculateAverage(arrayValues);
-        System.out.println("Der Durchschnitt aller Werte ist: " + avg);
-        
-        int max = findMaximum(arrayValues);
-        System.out.println("Der größte Wert ist: " + max);
-        
-        int min = findMinimum(arrayValues);
-        System.out.println("Der kleinste Wert ist: " + min);
-        
+        System.out.println("" + analysis.giveValues());
+        System.out.println("" + analysis.calculateSum());
+        System.out.println("" + analysis.calculateAverage());
+        System.out.println("" + analysis.findMaximum());
+        System.out.println("" + analysis.findMinimum());
     }
 }
