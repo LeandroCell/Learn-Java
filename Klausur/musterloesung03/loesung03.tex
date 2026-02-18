@@ -1,0 +1,77 @@
+\documentclass{pi1-loesung}
+
+\begin{document}
+
+\maketitle{3}
+
+\section{Einmal mit Klasse (20\,\%)}
+
+Die Klasse \emph{Walker} enthält die drei geforderten Attribute. Sie sind alle privat, also von außen nicht zugreifbar. Das Spielobjekt und die maximale Anzahl der Schritte bleiben über die Lebenszeit einer Instanz der Klasse unverändert, sind also konstant. Die bisher gelaufene Anzahl von Schritten muss hingegen weitergezählt werden, ist also veränderlich.
+
+Achtung: Ohne den Konstruktor aus \ref{s:konstruktivismus} kann man den Quelltext nicht übersetzen, da den beiden Konstanten noch kein Wert zugewiesen wurde.
+\lstinputlisting[firstnumber=10,firstline=10,lastline=14]{PI1Game/Walker.java}
+\vspace{-4mm}
+\lstinputlisting[firstnumber=57,firstline=57,lastline=57]{PI1Game/Walker.java}
+
+\section{Konstruktivismus (20\,\%)}
+\label{s:konstruktivismus}
+
+Der Konstruktor bekommt die gleichen Parameter wie die Attribute und initialisiert diese damit. Da der Zweck der Parameter des Konstruktors nur die Initialisierung der Attribute ist, sind sie alle konstant.\footnote{Eigentlich wäre es schön, wenn an dieser Stelle geprüft würde, ob \emph{maxSteps} größer als 0 ist und \emph{stepsSoFar} mindestens 0 und kleiner als \emph{maxSteps} ist, denn anderenfalls wird sich ein Objekt später nicht wie gedacht verhalten. Fehlerbehandlung wird noch ein Thema in der Veranstaltung sein.}
+
+\lstinputlisting[firstnumber=16,firstline=16,lastline=21]{PI1Game/Walker.java}
+
+\section{Schritt für Schritt (40\,\%)}
+
+Die Methode \emph{act()} bewegt das Spielobjekt zunächst einen Schritt in Richtung seiner Orientierung. Dazu wird zwischen den vier möglichen Rotationen unterschieden und für jeden Fall die Position geeignet geändert. Danach wird ein Schritt-Sound abgespielt, da sich die Figur ja auf jeden Fall bewegt hat.
+
+\begin{lstlisting}[firstnumber=23]
+    void act()	
+\end{lstlisting}
+\vspace{-4mm}
+\lstinputlisting[firstnumber=24,firstline=24,lastline=40]{PI1Game/Walker.java}
+
+Dann wird der Schrittzähler um 1 erhöht. Erreicht er dabei die maximale Anzahl der Schritte, wird die Spielfigur um 180$^\circ$ gedreht und der Schrittzähler wieder auf 0 zurückgesetzt.
+
+\lstinputlisting[firstnumber=42,firstline=42,lastline=50]{PI1Game/Walker.java}
+\vspace{-5mm}
+\lstinputlisting[firstnumber=58,firstline=58,lastline=58]{PI1Game/Walker.java}
+
+\section{Und Action! (20\,\%)}
+
+In der Klasse \emph{PI1Game} wurden die folgenden Zeilen geändert, so dass die \emph{GameObject}-Instanzen gleich an neue \emph{Walker}-Objekte übergeben werden.
+
+\lstinputlisting[firstnumber=37,firstline=37,lastline=39]{PI1Game/PI1Game.java}
+
+Da es erforderlich ist, dass sich die NPC nur bewegen, wenn sich die Spielfigur auch bewegt hat, wird die Ausführung des Schleifenrumpfs vorzeitig abgebrochen, wenn eine ungültige Taste gedrückt wurde.
+
+\lstinputlisting[firstnumber=60,firstline=60,lastline=63]{PI1Game/PI1Game.java}
+
+Dadurch kann dann im Anschluss alles ausgeführt werden, was nur nach einem gültigen Schritt folgen sollte. Das Abspielen des Schrittsounds wurde auch hierhin verschoben. Es wird noch kurz gewartet, damit sich die anderen Figuren tatsächlich etwas später als die Spielfigur bewegen.
+
+\lstinputlisting[firstnumber=65,firstline=65,lastline=66]{PI1Game/PI1Game.java}
+\vspace{-4mm}
+\begin{lstlisting}[firstnumber=67]
+            walker1.act();
+            wlaker2.act();
+            walker3.act();
+\end{lstlisting}
+
+\section{Bonusaufgabe (5\,\%)}
+
+Es gibt mehrere Möglichkeiten, wie die NPC-Klasse an die Position der Spielfigur kommen kann, z.B. könnte die Spielfigur zusätzlich dem Konstruktor übergeben werden, der sie für den späteren Zugriff in einem Attribut speichert. Hier wurde aber die einfachere Variante gewählt, die Spielfigur direkt an die Methode \emph{act} als Parameter zu übergeben.
+
+\lstinputlisting[firstnumber=23,firstline=23,lastline=23]{PI1Game/Walker.java}
+
+Am Ende der Methode wird dann geprüft, ob sowohl die $x$- als auch die $y$-Koordinate gleich sind. Wenn ja, verschwindet die Spielfigur und es wird ein Sound abgespielt.\footnote{Die Lizenzinformation wurde der Datei \emph{README.TXT} hinzugefügt.}
+
+\lstinputlisting[firstnumber=52,firstline=52,lastline=55]{PI1Game/Walker.java}
+
+In \emph{PI1Game} hängt nun die Fortsetzung der Schleife von der Sichtbarkeit der Spielfigur ab.
+
+\lstinputlisting[firstnumber=42,firstline=42,lastline=42]{PI1Game/PI1Game.java}
+
+Außerdem muss die Spielfigur in der Klasse \emph{PI1Game} dann natürlich noch als aktueller Parameter an die \emph{act}-Methoden übergeben werden.
+
+\lstinputlisting[firstnumber=67,firstline=67,lastline=69]{PI1Game/PI1Game.java}
+
+\end{document}

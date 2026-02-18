@@ -1,0 +1,50 @@
+\documentclass{pi1-loesung}
+
+\renewcommand{\baselinestretch}{0.98}
+
+\begin{document}
+
+\maketitle{10}
+
+\section{Lässig Level laden (100\,\%)}
+
+Die Klasse \emph{Level} implementiert etwas mehr als gefordert war. Sie erzeugt \emph{Walker}-Instanzen mit drei verschiedenen Figuren und erzeugt neben dem Ziel-Symbol auch noch Brücken in zwei Ausrichtungen. Zudem akzeptiert sie ein 'W' (Wasser), um einen Bach zu erzeugen. Diese Funktionalität wurde allerdings der Klasse \emph{Field} hinzugefügt, die dann einfach die Zeichenkette ``path'' durch ``water'' in Dateinamen ersetzt (bei der Bonusaufgabe abgedruckt). Damit lässt sich das ursprüngliche Spielfeld wieder erzeugen.
+
+\lstinputlisting[lastline=39]{PI1Game/Level.java}
+\lstinputlisting[firstnumber=44,firstline=44,lastline=80]{PI1Game/Level.java}
+\lstinputlisting[firstnumber=83,firstline=83,lastline=115]{PI1Game/Level.java}
+\lstinputlisting[firstnumber=117,firstline=117,lastline=120]{PI1Game/Level.java}
+\vspace{-4mm}
+\begin{lstlisting}[firstnumber=last]
+                    new GameObject(x / 2, y / 2, 0, images[index - 16], field);
+\end{lstlisting}
+\vspace{-4mm}
+\lstinputlisting[firstnumber=122,firstline=122,lastline=140]{PI1Game/Level.java}
+\vspace{-4mm}
+\lstinputlisting[firstnumber=152,firstline=152,lastline=152]{PI1Game/Level.java}
+
+Die Klasse wird in der Methode \emph{main()} der Klasse \emph{PI1Game} verwendet:
+
+\lstinputlisting[firstnumber=15,firstline=15,lastline=20]{PI1Game/PI1Game.java}
+
+\section{Bonusaufgabe: Ich bin dann mal weg (10\,\%)}
+
+Die Klasse \emph{Field} enthält nun eine Liste aller erzeugten Spielobjekte, die im Konstruktor befüllt und in der Methode \emph{hide()} verwendet wird, um die Objekte wieder verschwinden zu lassen:
+
+\lstinputlisting[firstnumber=47,firstline=47,lastline=48]{PI1Game/Field.java}
+\lstinputlisting[firstnumber=62,firstline=62,lastline=64]{PI1Game/Field.java}
+\lstinputlisting[firstnumber=135,firstline=135,lastline=143]{PI1Game/Field.java}
+
+Die Klasse \emph{Level} enthält ebenso eine Liste, die ebenfalls mit den erzeugten Spielobjekten befüllt und in der Methode \emph{hide()} verwendet wird, um die Objekte wieder verschwinden zu lassen. Außerdem wird dort die \emph{hide()}-Methode von \emph{Field} aufgerufen.
+
+\lstinputlisting[firstnumber=41,firstline=41,lastline=42]{PI1Game/Level.java}
+\lstinputlisting[firstnumber=81,firstline=81,lastline=81]{PI1Game/Level.java}
+\lstinputlisting[firstnumber=116,firstline=116,lastline=116]{PI1Game/Level.java}
+\lstinputlisting[firstnumber=121,firstline=121,lastline=111]{PI1Game/Level.java}
+\lstinputlisting[firstnumber=142,firstline=142,lastline=151]{PI1Game/Level.java}
+
+Am Ende der Methode \emph{main()} der Klasse \emph{PI1Game} wird diese Methode aufgerufen, so dass der Level wieder verschwindet, was auch funktioniert.
+
+\lstinputlisting[firstnumber=25,firstline=25,lastline=25]{PI1Game/PI1Game.java}
+
+\end{document}

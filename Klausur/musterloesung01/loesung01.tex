@@ -1,0 +1,57 @@
+\documentclass{pi1}
+
+\bibliographystyle{gerplain}
+\usepackage{bibgerm}
+
+\begin{document}
+
+% \maketitle{Übungsblatt}{Tutor:in}{Bearbeiter:in}
+\maketitle{1}{keine}{Thomas Röfer}
+
+\section{Primzahlen berechnen}
+\label{s:primzahlen}
+
+Primzahlen kann man einfach berechnen, indem man eine Folge aller Zahlen ab 2 erzeugt,
+
+\lstinputlisting[firstnumber=10,firstline=10,lastline=12]{Primes.java}
+
+nur Zahlen behält, die nicht durch kleinere Zahlen teilbar sind,
+
+\lstinputlisting[firstnumber=13,firstline=13,lastline=13]{Primes.java}
+
+und die verbleibenden Zahlen ausgibt.
+
+\lstinputlisting[firstnumber=14,firstline=14,lastline=15]{Primes.java}
+
+\textbf{Test.} Nach einem Aufruf von \emph{Primes.primes()} wird jeweils eine Zahl pro Zeile ausgegeben. Die Zahlenfolge \emph{2, 3, 5, 7, 11, 13, 17} usw. sieht korrekt nach Primzahlen aus.
+
+\section{Verbesserungen}
+
+Auch wenn das Programm aus \ref{s:primzahlen} schnell ist, merkt man, dass es für größere Primzahlen immer langsamer wird. Folgende Verbesserungen sind denkbar:
+
+\begin{itemize}
+  \item Man könnte die 2 separat ausgeben und danach nur noch ungerade Zahlen erzeugen.
+  \item Man muss eigentlich nur testen, ob eine Zahl $i$ durch keine Zahl $j \in [2\ldots \lfloor\sqrt{i}\rfloor]$ teilbar ist.
+  \item Bei bekannter Obergrenze kann man das Sieb des Eratosthenes \cite{mohring-oellrich-08} verwenden (s. Tab.~\ref{t:eratosthenes}).
+\end{itemize}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    & \textbf{2} & \textbf{3} & 4 \\ 
+    \hline
+    \textbf{5} & 6 & \textbf{7} & 8 \\ 
+    \hline
+    9 & 10 & \textbf{11} & 12 \\ 
+    \hline
+    \textbf{13} & 14 & 15 & 16 \\
+    \hline
+  \end{tabular}
+  \caption{Sieb des Eratosthenes. Die fett dargestellten Zahlen wurden nicht weggestrichen.}\label{t:eratosthenes}
+\end{table}
+
+\bibliography{Referenzen}
+
+\end{document}
+

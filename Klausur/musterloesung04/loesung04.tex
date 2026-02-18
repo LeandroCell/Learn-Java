@@ -1,0 +1,93 @@
+\documentclass{pi1-loesung}
+
+\begin{document}
+
+\maketitle{4}
+
+\section{Müh(l)en des Programmierens}
+
+\subsection{Dokumentation}\label{s:doku}
+
+\lstinputlisting{OneMansMorris/Rules.java}
+
+\subsection{Fehlersuche}
+
+Beim Test des Programms fallen zwei Fehler auf. Zum einen ist es unmöglich, das innere Quadrat an den dafür vorgesehenen Orten nach außen hin zu verlassen. Außerdem kann die Figur von oben und unten in die Mitte des Spielfelds bewegt werden, also das Gitter verlassen.
+
+Ein geeigneter Ansatz zur Fehlersuche ist es, die Figur an eine der Fehlerstellen zu bewegen, einen Haltepunkt an den Anfang von \emph{isLegal} zu setzen und dann die Pfeiltaste in die entsprechende Richtung zu drücken. Danach kann \emph{isLegal} Schritt für Schritt ausgeführt werden. Durch die Anzeige der lokalen Variablen und der Erkenntnis, mit welchem \emph{return} die Methode verlassen wird, ist nachvollziehbar, was passiert.
+
+Die Figur wird oben in der Mitte platziert und die Pfeiltaste nach oben gedrückt. In der Methode sind dann \emph{dirX} 0 und \emph{dirY} -1. Der Code kann nun bis in die letzte Zeile ohne besondere Vorkommnisse mit \emph{Schritt über} durchlaufen werden. In der letzten Zeile fällt allerdings auf, dass \emph{outerLevel} eigentlich 2 sein müsste, wenn es die größere Zahl der beiden Konstanten \emph{fromLevel} und \emph{toLevel} sein sollte. Statt dessen ist die Konstante aber 1, wodurch der abschließende Vergleich \emph{false} ergibt, obwohl an dieser Stelle \emph{true} zurückgegeben werden müsste, denn eigentlich sollte der Zug ja legal sein.
+
+Die Methode \emph{maxAbs} berechnet ihrem Namen nach das Maximum zweier Absolutwerte. Damit sollte sie eigentlich zum Bestimmen der größeren zweier positiver Zahlen verwendet werden können. Ein Blick in die Implementierung zeigt aber, dass zusätzlich noch die Koordinaten der Spielfeldmitte von beiden Zahlen abgezogen werden. Dadurch wird aus $max(abs(fromLevel - centerX), abs(toLevel - centerY))$ nun $max(abs(1 - 2), abs(2 - 2)) = max(abs(-1), abs(0)) = max(1, 0) = 1$. Gebraucht würde hier aber einfach $max(fromLevel, toLevel)$, was tatsächlich 2 wäre. Dies wurde im Listing in \ref{s:doku} in Zeile 74 bereits korrigiert.
+
+Ein weiterer Test zeigt nun, dass ein Wechsel zwischen den Quadraten nun oben und unten möglich ist und die Figur auch nicht mehr in die Mitte laufen kann. Allerdings ist ein Wechsel links und rechts immer noch nicht möglich. Also wird das oben beschriebene Vorgehen noch einmal angewendet, diesmal mit der Figur an der Abzweigung mittig links und dem Versuch, vom inneren in das äußere Quadrat zu wechseln. Hierbei stellt sich heraus, dass das vorletzte \emph{return} erreicht wird. Eine nähere Prüfung der Bedingung darüber zeigt, dass im rechten Teil die x-Koordinate des Spielobjekts mit der y-Koordinate der Mitte verglichen wird, was sicher ein Fehler ist und dazu geführt hat, dass der Gesamtausdruck wahr wurde. Würde hier mit \emph{object.getY()} verglichen, wäre dieses \emph{return} nicht erreicht worden. Dieser Fehler wurde im Listing in \ref{s:doku} in Zeile 67 ebenfalls korrigiert.
+
+Ein dritter Test ergibt nun, dass sich die Figur wie erwartet bewegen lässt.
+
+Ein Kritikpunkt an der Implementierung ist, dass der Methodenname \emph{maxAbs} irreführend ist, da eben nicht nur das Maximum zweier Absolutwerte bestimmt wird. Ein besserer Name wäre z.B. \emph{calcLevel} gewesen.
+
+\section{Quiz}
+
+\renewcommand{\labelenumi}{\alph{enumi})}
+
+\begin{enumerate}
+
+\item \emph{Wie kann \emph{a == false} maximal kurz dargestellt werden?}
+
+Entsprechend der Wahrheitstabelle aus Vorlesung 6, Folie 11: \emph{!a}.
+
+\item \emph{Warum ist in booleschen Ausdrücken der Vergleich \emph{== true} überflüssig?}
+
+Wie der Wahrheitstabelle für \emph{==} aus Vorlesung 6, Folie 11 entnommen werden kann, ist das Ergebnis eines Vergleichs mit \emph{true} identisch zu dem verglichenen Wert selbst. Deshalb ist ein solcher Vergleich überflüssig.
+
+\item \emph{Wie kann \emph{!(a $>$ b)} maximal kurz dargestellt werden?}
+
+Das Gegenteil von $a > b$ ist $a \le b$. Also ist die kurze Darstellung in Java: \emph{a $<=$ b}.
+
+\item \emph{Wie kann}
+
+\begin{lstlisting}
+if (a) {
+}
+else {
+    b();   
+}
+\end{lstlisting}
+
+\emph{maximal kurz dargestellt werden?}
+
+\emph{b()} wird immer genau dann ausgeführt, wenn \emph{a} falsch ist. Das kann auch direkt hingeschrieben werden:
+
+\begin{lstlisting}
+if (!a) {
+    b();   
+}
+\end{lstlisting}
+
+\item \emph{Was liefert nach Ausführung des folgenden Codes \emph{a.getRotation()} und warum?}
+
+\begin{lstlisting}
+final GameObject a = new GameObject(0, 0, 0, "player");
+a.setRotation(1);
+final GameObject b = a;
+b.setRotation(2);
+\end{lstlisting}
+
+\emph{a.getRotation()} liefert 2 zurück, da \emph{a} und \emph{b} auf dasselbe Objekt zeigen und \emph{b.setRotation(2)} die Rotation für dieses Objekts auf 2 gesetzt hat.
+
+\item \emph{Was machen die Zeilen 3--5 (als Ganzes)?}
+
+\begin{lstlisting}
+int a = 17;
+int b = 4;
+a = a + b;
+b = a - b;
+a = a - b;
+\end{lstlisting}
+
+Die drei Zeilen vertauschen \emph{a} und \emph{b}. \emph{a} wird in Zeile 3 auf die Summe beider Zahlen gesetzt. Da \emph{b} zuerst noch unverändert bleibt, lässt sich der ursprüngliche Wert von \emph{a} immer noch als $a - b$ berechnen. Dies wird in Zeile 4 auch gemacht und \emph{b} zugewiesen, d.h. \emph{b} hat dann den ursprünglichen Wert von \emph{a}. Dadurch lässt sich nun der ursprüngliche Wert von \emph{b} als $a - b$ bestimmen, was in Zeile 5 auch gemacht und an \emph{a} zugewiesen wird. Somit hat \emph{a} nun den ursprünglichen Wert von \emph{b} und \emph{b} den ursprünglichen Wert von \emph{a}, d.h. sie wurden vertauscht.
+
+\end{enumerate}
+
+\end{document}
+

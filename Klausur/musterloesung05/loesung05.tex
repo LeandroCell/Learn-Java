@@ -1,0 +1,39 @@
+\documentclass{pi1-loesung}
+
+\begin{document}
+
+\maketitle{5}
+
+\section{Zugriffssicherheit (30\,\%)}
+
+Die Feldbeschreibung wird vom Konstruktor in einem konstanten Attribut gespeichert.
+
+\lstinputlisting[firstnumber=37,firstline=37,lastline=52]{PI1Game/Field.java}\vspace{-4.3mm}
+\lstinputlisting[firstnumber=59,firstline=59,lastline=59]{PI1Game/Field.java}
+
+Um innerhalb der Feldbeschreibung zu liegen, müssen beide Koordinaten mindestens 0 sein. Außerdem muss die (vertikale) $y$-Koordinate kleiner als die Länge des Arrays sein und die (horizontale) $x$-Koordinate muss kleiner als die Länge der Zeichenkette in der durch $y$ indizierten Zeile sein.\footnote{Achtung: Es ist wichtig, zuerst zu prüfen, ob $y$ ein gültiger Index für das Array ist, bevor es verwendet wird, um auf das Array zuzugreifen. Schlägt nämlich einer der ersten Tests fehl, werden alle weiteren nicht mehr ausgewertet, was für den Array-Zugriff einen Bereichsfehler verhindert.} Dann wird das entsprechende Zeichen zurückgeliefert. Ansonsten wird das Leerzeichen zurückgegeben.
+
+\lstinputlisting[firstnumber=61,firstline=61,lastline=79]{PI1Game/Field.java}
+
+\section{Nachbarschaftshilfe (30\,\%)}
+
+Das Überprüfen der vier Nachbarn wird mit Hilfe eines Arrays erledigt, das die jeweiligen Versätze für die $x$- und $y$-Koordinaten enthält. Diese Koordinatenpaare werden durchlaufen, während gleichzeitig die Variable \emph{bit} in jedem Durchlauf verdoppelt wird und dadurch immer den zu dem getesteten Nachbarn passenden Wert hat. Die eigentliche Signatur wird in der Variablen \emph{neighborhood} aufsummiert.
+
+\lstinputlisting[firstnumber=81,firstline=81,lastline=112]{PI1Game/Field.java}
+
+\section{Feldkonstruktion (40\,\%)}
+
+Das eigentliche Feld wird im Konstruktor erzeugt. Die Feldbeschreibung wird vertikal ($y$) und horizontal ($x$) in Zweierschritten durchlaufen. Zu jeder Zelle wird die Signatur bestimmt und diese als Index in das Array der Grafiknamen verwendet. Mit Hilfe des passenden Grafiknamens wird dann das entsprechende \emph{GameObject} erzeugt, wobei dessen Koordinaten jeweils halbiert werden, damit die Spielobjekte in der Anzeige direkt aneinander stoßen.
+
+\lstinputlisting[firstnumber=54,firstline=54,lastline=58]{PI1Game/Field.java}
+
+In Abbildung~\ref{f:test} ist das Ergebnis des Aufrufs der Methode \emph{test()} zu sehen. Hierbei kommen alle 16 Gittervarianten vor. Werden in der Feldbeschreibung in den zwei ersten Strings alle Leerzeichen am Ende entfernt, fehlt bei einem erneuten Aufruf von \emph{test()} die rechteste Zelle des Spielfeldes, aber ansonsten bleibt alles gleich. Es wird also korrekt mit verschieden langen Zeilen umgegangen.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{screenshot}
+	\caption{Das Ergebnis der Methode \emph{test()}}
+	\label{f:test}
+\end{figure}
+
+\end{document}

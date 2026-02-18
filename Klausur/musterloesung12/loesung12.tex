@@ -1,0 +1,33 @@
+\documentclass{pi1-loesung}
+
+\begin{document}
+
+\maketitle{12}
+
+\section{Fernsteuernd (40\%)}
+
+Die Klasse \emph{RemotePlayer} setzt die Aufgabenstellung wie auf die Übungsblatt beschrieben um. Ihr Konstruktor bekommt zusätzlich zu den Parametern, die der Konstruktor der Basisklasse \emph{Player} hat, die IP-Adresse übergeben, unter der er das Spiel mit dem \emph{ControlledPlayer} finden kann, sowie die Portnummer übergeben, auf der dieses auf eine Kontaktaufnahme wartet. In der Methode \emph{act} wird einfach das \emph{act} der Klasse \emph{Player} ausgeführt. Danach zeigt die Rotation an, in welche Richtung sich die Figur bewegt haben muss. Dies wird per Netzwerk übertragen. Alle auftretenden Ausnahmen werden so gefangen, dass eine Fehlermeldung auf der Konsole ausgegeben (außer beim Schließen) und die Figur unsichtbar gemacht wird. Das unsichtbar Machen bewirkt, dass der Socket geschlossen wird und das Spiel letztendlich anhält. 
+
+\lstinputlisting{PI1Game/RemotePlayer.java}
+
+\section{Ferngesteuert (40\%)}
+
+Der \emph{ControlledPlayer} ist ganz ähnlich implementiert, insbesondere was die Fehlerbehandlung angeht. Die Überladung von \emph{setVisible} ist fast identisch. Einziger Unterschied ist, dass \emph{socket} hier auch \emph{null} sein könnte, wenn noch keine Verbindung aufgebaut wurde. Da hier ein Server implementiert wird, benötigt der Konstruktor keine IP-Adresse. Zum Öffnen des Server-Sockets wird \emph{try-with-resources} benutzt, weshalb dieser bereits vor Ende des Konstruktors wieder geschlossen wird. In der Methode \emph{act} werden die Bewegungsrichtungen einfach als Bytes mit den Werten 0-3 empfangen und die Figur dann entsprechend bewegt. Zumindest auf dem Mac liefert das Lesen aus einer von der Gegenseite geschlossenen Verbindung -1 zurück. Dies wird auch durch das Verstecken der Figur behandelt.
+
+\lstinputlisting{PI1Game/ControlledPlayer.java}
+
+\section{Spielend (20\%)}
+
+Der Konstruktor der Klasse \emph{Level} bekommt nun zusätzlich die IP-Adresse und den Port übergeben. Ist die IP-Adresse \emph{null}, wird als \emph{Player} ein \emph{ControlledPlayer} erzeugt, ansonsten ein \emph{RemotePlayer}:
+
+\lstinputlisting[firstnumber=54,firstline=54,lastline=54]{PI1Game/Level.java}
+\lstinputlisting[firstnumber=76,firstline=76,lastline=78]{PI1Game/Level.java}
+
+In der Klasse \emph{PI1Game} hat die Methode \emph{main} nun ebenfalls die IP-Adresse und den Port als Parameter, mit derselben Bedeutung. Diese werden an den \emph{Level} durchgereicht:
+
+\lstinputlisting[firstnumber=18,firstline=18,lastline=18]{PI1Game/PI1Game.java}
+\lstinputlisting[firstnumber=21,firstline=21,lastline=21]{PI1Game/PI1Game.java}
+
+Dadurch kann nun in zwei BlueJs das Spiel gestartet werden. Beim ersten wird \emph{null} als Adresse übergeben (und z.B. 9999 als Port). Beim zweiten wird 127.0.0.1 als Adresse verwendet (\emph{localhost}) und derselbe Port. Mit der zweiten Instanz können nun beide gesteuert werden, die sich identisch verhalten. Wird die zweite Instanz vorzeitig beendet, liefert sie die entsprechende Fehlermeldung und beendet sich auch. Wird hingegen die erste Instanz vorzeitig beendet, können noch ein paar Bewegungen in der zweiten ausgeführt werden, bevor sich diese ebenfalls mit einer Fehlermeldung beendet.
+
+\end{document}

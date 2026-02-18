@@ -1,0 +1,46 @@
+\documentclass{pi1-loesung}
+
+\begin{document}
+
+\maketitle{11}
+
+\section{Einmal ein Lambda, bitte}
+
+Da Listen bereits direkt eine Methode \emph{forEach} anbieten, ist dies einfach:
+
+\begin{lstlisting}[firstnumber=20]
+        level.getActors().forEach(actor -> actor.act());
+\end{lstlisting}
+
+\section{Strömen statt Schleifen}
+
+Die Variante \emph{IntStream.iterate} mit drei Parametern in Kombination mit \emph{forEach} entspricht ziemlich genau einer Zählschleife. Deshalb müssen zwei solche Streams ineinander verschachtelt werden, um über das zweidimensionale Feld zu laufen:
+
+\lstinputlisting[firstnumber=62,firstline=62,lastline=65]{PI1Game/Field.java}
+
+\section{In Strömen rechnen}
+
+Hier kann ein \emph{IntStream} genommen werden, um über die vier Richtungen zu iterieren. Da in Einerschritten gezählt wird, kann hier statt \emph{iterate} auch das etwas einfachere \emph{range} genutzt werden. Durch \emph{filter} werden nur die Richtungen erhalten, in denen auch eine Verbindung zum Nachbarn besteht. Aufsummiert werden sollen aber nicht die Richtungen selbst, sondern die ihnen entsprechenden Bits. Dies wird durch ein \emph{map} erreicht, das diese Umrechnung für jede noch vorhandene Richtung vornimmt. Im Ergebnis müssen die einzelnen Bits ver-odert werden, was mit \emph{reduce} erreicht wird. Da die Richtungsbits disjunkt sind, kann hier auch -- wie in der ursprünglichen Implementierung -- die Addition verwendet werden. Somit könnte \emph{reduce} hier auch durch die parameterlose Methode \emph{sum} ersetzt werden, die dasselbe Ergebnis liefert.
+
+\lstinputlisting[firstnumber=106,firstline=106,lastline=109]{PI1Game/Field.java}
+
+\section{In Strömen sammeln}
+
+Hier reicht es, von einer Vorlesungsfolie abzuschreiben. \emph{toList} liefert alle Elemente des Streams als Liste zurück:
+
+\lstinputlisting[firstnumber=52,firstline=52,lastline=55]{PI1Game/Level.java}
+
+\section{Kreativ strömen}
+
+Einen wirklichen Ersatz für eine \emph{while}-Schleife bieten Java-Streams eigentlich nicht, denn es wird erwartet, dass immer Daten durch den Strom fließen. Insofern muss dafür gesorgt werden, dass solche Daten erzeugt werden, auch wenn sie eigentlich gar nicht benötigt werden. In der folgenden Implementierung wurde hierfür die Liste der Akteure gewählt, die von \emph{generate} immer wieder durch den Strom geleitet wird, weil diese ja auch wenigstens in der "`Schleife"' verwendet wird. Das \emph{takeWhile} sorgt dafür, dass die Verarbeitung abbricht, sobald die Bedingung falsch wird. \emph{forEach} führt, wie üblich, den Schleifeninhalt aus.
+
+\lstinputlisting[firstnumber=22,firstline=22,lastline=24]{PI1Game/PI1Game.java}
+
+Alternativ hätte auch \emph{iterate} verwendet werden können, das mit der Identitätsfunktion zum Weiterzählen arbeitet:
+
+\begin{lstlisting}[firstnumber=22]
+        Stream.iterate(level.getActors(), actors -> actors.get(0).isVisible(), actors -> actors)
+                .forEach(actors -> actors.forEach(actor -> actor.act()));	
+\end{lstlisting}
+
+\end{document}

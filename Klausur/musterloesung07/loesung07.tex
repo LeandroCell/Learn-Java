@@ -1,0 +1,27 @@
+\documentclass{pi1-loesung}
+
+\renewcommand{\baselinestretch}{0.955}
+
+\begin{document}
+
+\maketitle{7}
+
+\section{Nachbarschaften}
+In der Nachbarschaftssignatur werden die Zahlen 1 für Richtung 0, 2 für Richtung 1, 4 für Richtung 3 und 8 für Richtung 3 addiert, um die erreichbaren Nachbarn zu kodieren. Die Zahlen sind eigentlich Bits, d.h. sie lassen sich mit $1 << richtung$ berechnen. Um zu testen, ob das Bit für eine bestimmte Richtung gesetzt ist, muss es isoliert werden. Dies kann durch eine bitweise Und-Verknüpfung erreicht werden. $signatur$ $\&$ $(1 << richtung)$ berechnet eine Zahl, in der alle Bits, die nicht $1 << richtung$ sind, auf jeden Fall 0 sind, also ausmaskiert wurden. Übrig bleibt das Bit bei $1 << richtung$ aus der Signatur. Ist es dort gesetzt, ist das Ergebnis der Und-Verknüpfung $1 << richtung$, ist es das nicht, ist das Ergebnis 0. Also muss das Ergebnis der Und-Verknüpfung einfach mit 0 verglichen werden, um festzustellen, ob in einer bestimmten Richtung (im Code \emph{direction}) ein Nachbar existiert:\lstinputlisting[firstline=114,firstnumber=114,lastline=125]{PI1Game/Field.java}Die im nächsten Abschnitt beschriebenen Tests laufen alle erfolgreich durch.\section{Nachbarschaftstest}\lstinputlisting{PI1Game/FieldTest.java}\section{In geregelten Bahnen}
+
+In der Klasse \emph{PI1Game} wird das Feld konstruiert:
+\lstinputlisting[firstline=17,firstnumber=17,lastline=25]{PI1Game/PI1Game.java}
+
+Die Definition ersetzt einen Großteil der bisher einzeln erzeugten Objekte. Ein paar bleiben noch erhalten (Ziel, Brücke, Bach), da sie bisher noch nicht von der Klasse \emph{Field} erzeugt werden können.
+
+Des Weiteren wurden lediglich die vier Richtungstests erweitert:\lstinputlisting[firstline=38,firstnumber=38,lastline=38]{PI1Game/PI1Game.java}\lstinputlisting[firstline=42,firstnumber=42,lastline=42,breaklines=no]{PI1Game/PI1Game.java}\lstinputlisting[firstline=46,firstnumber=46,lastline=46,breaklines=no]{PI1Game/PI1Game.java}\lstinputlisting[firstline=50,firstnumber=50,lastline=50,breaklines=no]{PI1Game/PI1Game.java}In der Klasse \emph{Walker} wird nun statt der Attribute zum Schrittezählen das Feld gespeichert:\lstinputlisting[firstline=14,firstnumber=14,lastline=14]{PI1Game/Walker.java}\lstinputlisting[firstline=17,firstnumber=17,lastline=17]{PI1Game/Walker.java}\lstinputlisting[firstline=20,firstnumber=20,lastline=20]{PI1Game/Walker.java}
+
+Alle Zeilen, in denen Schritte gezählt wurden, entfallen. Geht es in Vorwärtsrichtung nicht mehr weiter, wird umgedreht.
+
+\lstinputlisting[firstline=47,firstnumber=47,lastline=60]{PI1Game/Walker.java}
+
+In \emph{PI1Game} ändern sich die Aufrufe der Konstruktoren:
+
+\lstinputlisting[firstline=31,firstnumber=31,lastline=33]{PI1Game/PI1Game.java}
+
+\end{document}

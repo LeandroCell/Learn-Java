@@ -1,0 +1,119 @@
+\documentclass{pi1-loesung}
+
+\usepackage{amssymb}
+
+\begin{document}
+
+\maketitle{6}
+
+\section{Ein Ring, sie zu testen\ldots}
+
+\subsection{Testfälle definieren (60\,\%)}
+
+\label{s:testcases}
+
+Die Klasse \emph{RingBuffer} enthält einen Konstruktor und vier Methoden. Der Konstruktor bekommt als Parameter die Kapazität des Ringpuffers übergeben. Also müssen die Tests mit verschiedenen Kapazitäten durchgeführt werden. Wir haben uns hier für die Kapazitäten 0, 1, 3 und 1000 entschieden. 0 ist ein Grenzfall, da es die kleinste mögliche Kapazität darstellt und zudem die einzige Kapazität ist, bei der sich nichts in den Ringpuffer einfügen lässt. Die Kapazität 1 stellt auch einen Grenzfall dar, denn sie ist die kleinste, bei der sich tatsächlich etwas im Puffer speichern lässt. 3 und 1000 stellen Normalfälle dar, wobei 1000 eigentlich nur der Versuch ist zu testen, ob der Ringpuffer auch mit einer großen Anzahl von Elementen funktioniert: Der Test kann allerdings auch keine absolute Sicherheit bringen, denn wenn der Ringpuffer intern einfach mit einer festen, aber deutlich größeren Array-Größe als 1000 arbeiten würde, würden wir dies mit einem Test mit einer Kapazität von 1000 auch nicht entdecken. Da wir den Ringpuffer aber selbst implementieren werden, wissen wir, dass  die Größe des Puffers tatsächlich von der Kapazität abhängig sein wird.
+
+Negative Kapazitäten machen keinen Sinn. Wir wollen sie nicht in die regelmäßigen Tests aufnehmen. Nur der Vollständigkeit halber: die Implementierung bricht bei einer negativen Kapazitätsangabe mit einer \emph{NegativeArraySizeException} ab, denn Java lehnt die Erzeugung von Arrays mit negativer Größe ab.
+
+Die vier Methoden der Klasse \emph{RingBuffer} sind \emph{push}, \emph{pop}, \emph{peek} und \emph{size}. Mit einer Ausnahme kann man sie nur in Kombination testen. Ein Trivialfall ist der Aufruf von \emph{size} unmittelbar nach der Konstruktion des Puffers. Hier sollte immer 0 zurückkommen, da der Puffer zu Beginn ja leer ist. Ansonsten kann man eigentlich nur Folgen von \emph{push} und \emph{pop} testen und jeweils überprüfen, ob \emph{size}, \emph{peek} und \emph{pop} selbst die erwarteten Ergebnisse liefern. Dabei sollte die Anzahl der Aufrufe von \emph{push} auf jeden Fall die Kapazität des Puffers übersteigen und der Puffer zwischenzeitlich auch überfüllt sein, so dass Werte verloren gehen. Der Fall, dass \emph{pop} oder \emph{peek} bei einer \emph{size} von 0 aufgerufen werden, kann nicht automatisiert getestet werden, da nicht bekannt ist, wie das Ergebnis in diesem Fall eigentlich aussehen soll.
+
+Für die Kapazität 0 kann man nur \emph{size} und \emph{push} testen, da \emph{pop} und \emph{peek} kein gültiges Ergebnis liefern können\footnote{In der Implementierung erzeugen beide eine "`ArithmeticException: / by zero"'.}. Dabei sollte \emph{size} immer 0 liefern, auch wenn \emph{push} aufgerufen wurde, da der Puffer ja keine Kapazität besitzt, um einen Wert zu speichern. In der Klasse \emph{RingBufferTest} sieht das so aus:
+
+\lstinputlisting[firstnumber=15,firstline=15,lastline=21]{PI1Game/RingBufferTest.java}
+
+Die Methode \emph{size} wurde zusätzlich für die Kapazitäten 1 und 3 getestet. Für die Kapazität 1 wird folgende Folge ausgeführt und nach jedem Schritt überprüft, ob die Größe die erwartete ist: \emph{push(10), pop()} (Puffer wieder leer)\emph{, push(20), push(30)} (20 geht verloren, d.h. die Größe bleibt 1)\emph{, pop()} (Puffer wieder leer)\emph{, push(40), push(50), push(60)} (40 und 50 gehen verloren, d.h. die Größe bleibt 1).
+
+\lstinputlisting[firstnumber=24,firstline=24,lastline=41]{PI1Game/RingBufferTest.java}
+
+Für die Kapazität 3 wird folgende Folge ausgeführt: \emph{push(10), push(20), push(30)} (Puffer ist voll)\emph{, pop(), push(40), push(50)} (20 geht verloren, d.h. die Größe bleibt 3)\emph{, pop(), pop(), pop()} (Puffer ist leer).
+
+\lstinputlisting[firstnumber=44,firstline=44,lastline=65]{PI1Game/RingBufferTest.java}
+
+Die Methode \emph{pop} wurde für die Kapazitäten 1 und 3 getestet, wobei die gleichen Folgen wie bei den Tests von \emph{size} verwendet werden, nur dass nun die Rückgaben von \emph{pop} überprüft werden. Den Fall, dass mehr aus dem Puffer entnommen wird, als darin enthalten ist, haben wir nicht getestet, da nicht klar ist, welche Rückgabe wir eigentlich erwarten würden:
+
+\lstinputlisting[firstnumber=68,firstline=68,lastline=80]{PI1Game/RingBufferTest.java}
+
+\lstinputlisting[firstnumber=83,firstline=83,lastline=103]{PI1Game/RingBufferTest.java}
+
+Dieselben Tests werden für \emph{peek} durchgeführt, da \emph{peek} ja immer genau dasselbe wie ein nachfolgendes \emph{pop} zurückliefern sollte:
+
+\lstinputlisting[firstnumber=106,firstline=106,lastline=120]{PI1Game/RingBufferTest.java}
+
+\lstinputlisting[firstnumber=123,firstline=123,lastline=150]{PI1Game/RingBufferTest.java}
+
+Für größere Kapazitäten wurde noch ein programmierter Test hinzugefügt. Es wird immer die Folge \emph{push(), pop(), push()} wiederholt und zwar dreimal so oft, wie der Puffer groß ist (hier 1000 Elemente). Für die ersten 1000 Durchläufe wird erwartet, dass die Größe kontinuierlich zunimmt und alle hinzugefügten Elemente sich auch wieder entnehmen lassen. \emph{pushValue} wird in jedem Durchlauf um 2 erhöht, \emph{popValue} nur um 1. Danach verharrt die Größe bei der Kapazität und jeder zweite Wert geht verloren, d.h. auch \emph{popValue} wird in Zweierschritten erhöht:
+
+\lstinputlisting[firstnumber=153,firstline=153,lastline=177]{PI1Game/RingBufferTest.java}
+
+\subsection{Teststärke prüfen (20\,\%)}
+
+Im Konstruktor kann die Zuweisung an \emph{buffer} wegen des \emph{final} zwar nicht weggelassen werden, aber eine Zuweisung von \emph{null} hat praktisch denselben Effekt. Außerdem wurde die Größe des Arrays geändert. Mangels vorhandener Operatoren wurde hier testweise ein + 1 ergänzt.
+
+In \emph{push} wurde die erste Bedingung sowohl auf \emph{false} als auch auf \emph{true} gesetzt. Da eine Variation des Vergleichsoperators an dieser Stelle eigentlich gleichbedeutend damit ist, denn \emph{buffer.length} kann ja nicht kleiner 0 sein, wurde auf weitere Änderungen an dieser Stelle verzichtet. Für die zweite Bedingung wurde zusätzlich auch der Vergleichsoperator variiert. Im Kontext des Programms ist $<=$ dabei identisch mit \emph{true}. Interessant ist $>=$, denn hier laufen alle Tests weiterhin erfolgreich durch. Dies ist aber kein Fehler, da $>=$ der Bedingung lediglich Möglichkeiten hinzufügt, die in der Implementierung nicht vorkommen, d.h. \emph{entries > buffer.length} wird niemals wahr. Das Entfernen des Aufrufs von \emph{pop} hat denselben Effekt wie das Setzen der vorherigen Bedingung auf \emph{false}, weshalb darauf verzichtet wurde. Beim Eintragen des Werts in den Puffer wurde einmal das Modulo entfernt und einmal das Weiterzählen der Elementanzahl. Im Prinzip hätte man hier statt \emph{value} auch noch eine Konstante zuweisen können. Dies ist aber praktisch gleichbedeutend mit der Rückgabe des immer selben Array-Elements durch \emph{peek}, was stattdessen probiert wurde.
+
+Auf \emph{pop} wirken sich auch Änderungen an \emph{peek} aus, weshalb die erste und die letzte Zeile nicht geändert wurden. Beim Weiterzählen der Position wurden einmal das + 1 und einmal das Modulo entfernt. Ebenso wurde auch das Herunterzählen der Eintragsanzahl entfernt.
+
+Bei \emph{size} wurde einfach eine Konstante zurückgegeben, da sich die \emph{return}-Anweisung ja nicht entfernen lässt.
+
+Die Ergebnisse dieser Änderungen sind in der folgenden Tabelle zu sehen (die Namen der Tests sind gekürzt). Bis auf den oben diskutierten Fall werden alle Änderungen von Tests erkannt:
+
+\begin{table}[h]
+\begin{tabular}{|l|l||c|c|c|c|c|c|c|c|}
+\hline
+Zeile & Änderung & Cap0 & Size1 & Size3 & Pop1 & Pop3 & Peek1 & Peek3 & All1000 \\
+\hline
+\hline
+30 & buffer = null & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$  \\
+\hline
+30 & new int[capacity + 1] & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$  \\
+\hline
+39 & if (false) & \checkmark & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$  \\
+\hline
+39 & if (true) & $\times$ & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+40 & if (false) & \checkmark & $\times$ & $\times$ & \checkmark & $\times$ & \checkmark & $\times$ & $\times$ \\
+\hline
+40 & if (true) & \checkmark & $\times$ & $\times$ & \checkmark & $\times$ & \checkmark & $\times$ & $\times$ \\
+\hline
+40 & <= buffer.length & \checkmark & $\times$ & $\times$ & \checkmark & $\times$ & \checkmark & $\times$ & $\times$ \\
+\hline
+40 & >= buffer.length & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+43 & \% buffer.length wegl. & \checkmark & \checkmark & $\times$ & \checkmark & $\times$ & \checkmark & $\times$ & $\times$ \\
+\hline
+43 & ++ weglassen & \checkmark & $\times$ & $\times$ & \checkmark & $\times$ & \checkmark & $\times$ & $\times$ \\
+\hline
+53 & return buffer[0]; & \checkmark & \checkmark & \checkmark & \checkmark & $\times$ & \checkmark & $\times$ & $\times$ \\
+\hline
+63 & + 1 weglassen & \checkmark & \checkmark & \checkmark & \checkmark & $\times$ & \checkmark & $\times$ & $\times$ \\
+\hline
+63 & \% buffer.length wegl. & \checkmark & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ \\
+\hline
+64 & -{-}entries wegl. & \checkmark & $\times$ & $\times$ & \checkmark & $\times$ & \checkmark & $\times$ & $\times$ \\
+\hline
+75 & return 0 & \checkmark & $\times$ & $\times$ & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Spürhund (20\,\%)}
+\label{sec:spuerhund}
+
+Der Ringpuffer wurde in die Klasse \emph{Walker} aus der Musterlösung für Übungsblatt 3 integriert. Es wurde ein neues Attribut hinzugefügt, das zwei Aufgaben hat. Zum einen ist es \emph{null}, solange sich ein Objekt noch nicht im Verfolgermodus befindet. Zum anderen speichert es die Schritte der Spielfigur, sobald diese verfolgt wird.
+
+\lstinputlisting[firstnumber=18,firstline=18,lastline=18]{PI1Game/Walker.java}
+
+Am Anfang der Methode \emph{act} wird geprüft, ob der Verfolgermodus bereits aktiv ist. Wenn ja, wird die aktuelle Rotation der Spielfigur aufgezeichnet, d.h. in den Ringpuffer eingefügt.
+
+\lstinputlisting[firstnumber=30,firstline=30,lastline=32]{PI1Game/Walker.java}
+
+Dann bewegt sich der NPC, wie bisher, vorwärts, d.h. in Richtung seiner aktuellen Rotation, und spielt den Schritt-Sound ab. Danach wird wieder geprüft, ob der Verfolgermodus aktiv ist. Wenn ja, wird eine Rotation aus dem Puffer entfernt und als aktuelle Drehung gesetzt.
+
+\lstinputlisting[firstnumber=52,firstline=52,lastline=54]{PI1Game/Walker.java}
+
+Ansonsten wird zuerst das bisherige Verhalten ausgeführt, also das Erhöhen des Schrittzählers und die Wende, wenn dieser das Maximum erreicht hat. Danach wird dann geprüft, ob der Verfolgermodus nun aktiviert werden muss. Dazu wird für die aktuelle Rotation des NPC geprüft, ob sich die Spielfigur in der Richtung auf einer Höhe mit diesem befindet und ob sich die Spielfigur auch davor (und nicht dahinter) befindet. Da es vier Richtungen gibt, gibt es diesen Test viermal, wovon maximal nur einer wahr sein kann. Ist der Test erfolgreich, wird der Abstand der Spielfigur vom NPC bestimmt. Ist dieser Abstand klein genug (höchstens vier Schritte), wechselt der NPC in den Verfolgermodus. Dazu wird ein Ringpuffer mit genau so vielen Einträgen wie der Abstand erzeugt und mit der aktuellen Rotation des NPC bis auf einen Eintrag gefüllt. Da sich die Spielfigur vor dem NPC befindet, kann deren Position genau durch diese Schritte erreicht werden, wobei der erste Schritt nicht im Puffer gespeichert werden muss, weil der NPC immer mit einem Schritt vorwärts beginnt. Ein Platz im Puffer muss auch frei bleiben, weil \emph{act} immer erst eine neue Rotation einträgt, bevor wieder eine entnommen wird.
+
+\lstinputlisting[firstnumber=55,firstline=55,lastline=90]{PI1Game/Walker.java}
+
+\end{document}

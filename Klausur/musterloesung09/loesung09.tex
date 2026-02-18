@@ -1,0 +1,28 @@
+\documentclass{pi1-loesung}
+
+\begin{document}
+
+\maketitle{9}
+
+\section{Pro-aktiv}
+
+\lstinputlisting{PI1Game/Actor.java}
+
+\section{Spielkram}
+
+\lstinputlisting{PI1Game/Player.java}
+
+\section{Weniger Fernsteuerung}
+
+Die Klasse \emph{Walker} aus Übungsblatt 8 erbt nun von \emph{Actor} und reicht die Parameter geeignet durch, wodurch die Attribut \emph{avatar} und \emph{field} entfallen. Zudem wurde der Parameter der Methode \emph{act} in den Konstruktor verschoben und im Attribut \emph{player} gespeichert. Aufrufe von \emph{field.hasNeighbor} wurden durch Aufrufe der neuen Methode \emph{canWalk} ersetzt. Ansonsten ändert sich in \emph{act} nur, dass das Präfix \emph{avatar.} überall entfernt werden musste.
+
+\lstinputlisting{PI1Game/Walker.java}
+
+\section{Alles wieder zum Laufen bringen}
+
+In der Klasse \emph{PI1Game} werden alle Akteur:innen in eine Liste eingetragen und dann immer wieder ihre Methode \emph{act()} aufgerufen.
+
+\lstinputlisting[firstline=1,firstnumber=1,lastline=2]{PI1Game/PI1Game.java}
+\lstinputlisting[firstline=31,firstnumber=31,lastline=42]{PI1Game/PI1Game.java}
+
+\end{document}

@@ -1,0 +1,43 @@
+\documentclass{pi1-loesung}
+
+\begin{document}
+
+\maketitle{2}
+
+\section{Mock-up}
+
+Das Spielfeld ist in Abbildung~\ref{f:spielfeld} dargestellt. Die Spielfigur (unten links) muss das Ziel (oben rechts) erreichen. Es gibt drei andere Personen, die jeweils immer einen Schritt geradeaus gehen. Kommen sie dabei am Ende des Gitters an, drehen sie sich zusätzlich noch um 180$^\circ$, wodurch sie ab dann in die entgegen gesetzte Richtung laufen. Erreichen sie bei ihrem Zug die Gitterstelle, auf der die Spielfigur gerade steht, kommen sie ihr zu nahe (Abstand halten!) und sie hat verloren.
+
+Die Spielsituation ist so gestaltet, dass die Spielfigur erst durch hin- und herlaufen etwas abwarten muss, bis sie an allen Personen vorbei zum Ziel gelangen kann. Dies wird dadurch erreicht, dass die Person unten rechts einen etwas längeren Weg hat, auf dem sie immer patrouilliert. Dadurch verschieben sich die Bewegungsphasen zwischen dieser Person und den beiden anderen so, dass erst nach einer kurzen Weile ein Weg für die Spielfigur frei wird.
+
+Da zum aktuellen Zeitpunkt nur die Spielfigur tatsächlich gesteuert werden soll, wird nur dieses Objekt tatsächlich einer Konstanten (\emph{player}) zugewiesen, damit in \ref{s:richtung} mit ihm interagiert werden kann.
+
+\begin{figure}[h]
+\centerline{\includegraphics[width=0.54\textwidth]{spielfeld}}
+\caption{Das Spielfeld}\label{f:spielfeld}
+\end{figure}
+
+\lstinputlisting[firstnumber=15,firstline=15,lastline=39]{PI1Game/PI1Game.java}
+
+\section{Richtungweisend}\label{s:richtung}
+
+Wie in der Vorlesung wird die Abfrage der Tastatur in einer Endlosschleife durchgeführt. Die gedrückte Taste wird in einer Konstanten gespeichert, damit diese mehrfach verglichen werden kann, ohne immer auf eine neue Taste zu warten. Danach wird der Reihe nach mit den vier Tasten für die Richtungen 0-3 verglichen. Wenn eine Taste passt, wird die Spielfigur in die entsprechende Richtung gedreht und dann einen Schritt in diese Richtung bewegt. Da sich die Bedingungen alle gegenseitig ausschließen, könnten die \emph{else}-Schlüsselworte in dem abgedruckten Code auch weggelassen werden, ohne dass sich das Verhalten ändern würde. Für \ref{s:fehler} werden sie aber benötigt.
+
+\lstinputlisting[firstnumber=40,firstline=40,lastline=44]{PI1Game/PI1Game.java}\vspace{-0.85em}
+\lstinputlisting[firstnumber=46,firstline=46,lastline=49]{PI1Game/PI1Game.java}\vspace{-0.85em}
+\lstinputlisting[firstnumber=51,firstline=51,lastline=54]{PI1Game/PI1Game.java}\vspace{-0.85em}
+\lstinputlisting[firstnumber=56,firstline=56,lastline=59]{PI1Game/PI1Game.java}\vspace{-0.85em}
+\lstinputlisting[firstnumber=61,firstline=61,lastline=61]{PI1Game/PI1Game.java}\vspace{-0.85em}
+\lstinputlisting[firstnumber=65,firstline=65,lastline=65]{PI1Game/PI1Game.java}
+
+\section{Fehlerabweisend}\label{s:fehler}
+
+Mit den \emph{else}-Schlüsselworten in \ref{s:richtung} schließt ein erfolgreicher Vergleich die Ausführung aller nachfolgenden Vergleiche aus. Dies bedeutet insbesondere, dass dem allerletzten Vergleich noch ein \emph{else}-Zweig angehängt werden kann, der nur zur Ausführung kommt, wenn alle bisherigen Vergleiche fehlgeschlagen sind, d.h. eine andere Taste als die vier akzeptierten gedrückt wurde. In diesem Zweig wird also der Fehler-Sound abgespielt. In den anderen vier Zweigen wird jeweils der Schritt-Sound abgespielt.
+
+\lstinputlisting[firstnumber=45,firstline=45,lastline=45]{PI1Game/PI1Game.java}\vspace{-0.85em}
+\lstinputlisting[firstnumber=50,firstline=50,lastline=50]{PI1Game/PI1Game.java}\vspace{-0.85em}
+\lstinputlisting[firstnumber=55,firstline=55,lastline=55]{PI1Game/PI1Game.java}\vspace{-0.85em}
+\lstinputlisting[firstnumber=60,firstline=60,lastline=60]{PI1Game/PI1Game.java}\vspace{-0.85em}
+\lstinputlisting[firstnumber=62,firstline=62,lastline=64]{PI1Game/PI1Game.java}
+
+\end{document}
