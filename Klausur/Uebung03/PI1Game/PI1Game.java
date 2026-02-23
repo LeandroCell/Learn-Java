@@ -38,11 +38,11 @@ abstract class PI1Game extends Game
         new GameObject(4, 3, 0, "water-i");
         
         final GameObject player = new GameObject(0, 3, 0, "woman");
-        final GameObject npc1 = new GameObject(3, 2, 2, "child");
-        final GameObject npc2 = new GameObject(0, 1, 0, "laila");
-        final GameObject npc3 = new GameObject(1, 0, 2, "claudius");
+        final Npc npc1 = new Npc(new GameObject(3, 2, 2, "child"), 4, 1);
+        final Npc npc2 = new Npc(new GameObject(0, 1, 0, "laila"), 3, 0);
+        final Npc npc3 = new Npc(new GameObject(1, 0, 2, "claudius"), 3, 2);
         
-        while(true) {
+        while(player.isVisible()) {
             final int key = getNextKey();
             if (key == VK_RIGHT) {
                 player.setRotation(0);
@@ -66,7 +66,11 @@ abstract class PI1Game extends Game
             }
             else {
                 playSound("error");
+                continue;
             }
+            npc1.act(player);
+            npc2.act(player);
+            npc3.act(player);
         }
     }
 }
