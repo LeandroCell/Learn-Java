@@ -14,29 +14,30 @@ class Rules
 
     boolean isLegal(final GameObject object, final int dirX, final int dirY)
     {
+        // nicht bewegen verboten!
         if (dirX == 0 && dirY == 0) {
             return false;
         }
-
+        // mehr als ein schritt verboten!
         if (dirX != 0 && dirY != 0) {
             return false;
         }
-
+        // diagonal bewegen verboten!
         if (abs(dirX) > 1 || abs(dirY) > 1) {
             return false;
         }
-
+        
         final int fromLevel = maxAbs(object.getX(), object.getY());
         final int toLevel = maxAbs(object.getX() + dirX, object.getY() + dirY);
         if (fromLevel == toLevel) {
             return true;
         }
 
-        if (object.getX() != centerX && object.getX() != centerY) {
+        if (object.getX() != centerX && object.getY() != centerY) {
             return false;
         }
 
-        final int outerLevel = maxAbs(fromLevel, toLevel);
+        final int outerLevel = max(fromLevel, toLevel);
         return outerLevel == 2;
     }
 
