@@ -72,7 +72,7 @@ class GameObject extends Game
         static Canvas getInstance()
         {
             if (instance == null) {
-                new Canvas(5, 4, 96, 96);
+                new Canvas(5, 5, 96, 96);
             }
             return instance;
         }
