@@ -34,7 +34,7 @@ class Field
     
     private final String[] field;
     
-    Field(final String []field) 
+    Field(final String[] field)
     {
         this.field = field;
         
@@ -55,7 +55,7 @@ class Field
         }
     }
     
-    private int getNeighborhood(final int x, final int y) 
+    private int getNeighborhood(final int x, final int y)
     {
         int neighborhood = 0;
         
@@ -71,16 +71,17 @@ class Field
         if (getCell(x, y-1) != ' ') {
             neighborhood += 8;
         }
+        
         return neighborhood;
     }
 
     /** Ein Testfall, der alle Nachbarschaften enthält. */
     static void test()
     {
-        new GameObject.Canvas(5, 5, 96, 96);
+       new GameObject.Canvas(5, 5, 96, 96);
 
-        // Einkommentieren, sobald Konstruktor vorhanden
-        new Field(new String[] {
+       // Einkommentieren, sobald Konstruktor vorhanden
+       new Field(new String[] {
             "O-O-O-O  ",
             "|   |    ",
             "O O-O-O O",
@@ -90,6 +91,6 @@ class Field
             "O O-O-O O",
             "    |   |",
             "O-O-O-O-O"
-        });
+       });
     }
 }
