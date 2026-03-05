@@ -58,7 +58,7 @@ class Walker
 
             // Wenn maximale Anzahl erreicht, umdrehen und Zählung neu beginnen
             if (stepsSoFar == maxSteps) {
-                avatar.setRotation(avatar.getRotation() + 2);
+                avatar.setRotation((avatar.getRotation() + 2) % 4);
                 stepsSoFar = 0;
             }
 
