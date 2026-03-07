@@ -1,5 +1,5 @@
-import static java.lang.Math.abs;
 import static java.lang.Math.max;
+import static java.lang.Math.abs;
 
 /**
  * Diese Klasse definiert <Zusammenfassung ergänzen>
@@ -45,22 +45,23 @@ class Npc
         }
         else {
             stepsSoFar += 1;
-            
+                
             if(stepsSoFar == maxSteps) {
-               npc.setRotation(npc.getRotation() + 2);
+               npc.setRotation((npc.getRotation() + 2) % 4);
                stepsSoFar = 0;
             }
             
-            if (npc.getRotation() == 0 && npc.getX() < player.getX() && npc.getY() == player.getY()
-                    || npc.getRotation() == 1 && npc.getX() == player.getX() && npc.getY() < player.getY()
-                    || npc.getRotation() == 2 && npc.getX() > player.getX() && npc.getY() == player.getY()
-                    || npc.getRotation() == 3 && npc.getX() == player.getX() && npc.getY() > player.getY()) {
-                // Distanz vom NPC zum Spieler
+            if (npc.getRotation() == 0 && player.getX() > npc.getX() && player.getY() == npc.getY()
+                    || npc.getRotation() == 1 && player.getX() == npc.getX() && player.getY() > npc.getY() 
+                    || npc.getRotation() == 2 && player.getX() < npc.getX() && player.getY() == npc.getY()
+                    || npc.getRotation() == 3 && player.getX() == npc.getX() && player.getY() < npc.getY()) {
+                
                 final int distance = max(abs(player.getX() - npc.getX()), 
-                        abs(player.getY() - npc.getY()));
+                        abs(player.getY() -npc.getY()));
                 
                 if (distance <= 4) {
                     stepsToFollow = new RingBuffer(distance);
+                    
                     for (int i = 1; i < distance; ++i) {
                         stepsToFollow.push(npc.getRotation());
                     }
@@ -68,9 +69,9 @@ class Npc
             }
         }
         
-        if(npc.getX() == player.getX() && npc.getY() == player.getY()) {
+        if (npc.getX() == player.getX() && npc.getY() == player.getY()) {
             player.setVisible(false);
             npc.playSound("go-away");
-        }
+        }  
     }
 }
