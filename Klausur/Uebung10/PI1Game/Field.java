@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Diese Klasse repräsentiert ein Spielfeld. Ihr Konstruktor bekommt dieses als
  * String-Array übergeben.
@@ -33,6 +36,9 @@ class Field
     };
     
     private final String[] field;
+    
+    /** Die Liste aller erzeugten Spielobjekte. */
+    private final List<GameObject> gameObjects = new ArrayList<>();
     
     Field(final String[] field)
     {
@@ -80,22 +86,10 @@ class Field
         return (getNeighborhood(x*2, y*2) & (1 << direction)) != 0;
     }
 
-    /** Ein Testfall, der alle Nachbarschaften enthält. 
-    static void test()
+    void hide()
     {
-       new GameObject.Canvas(5, 5, 96, 96);
-
-       // Einkommentieren, sobald Konstruktor vorhanden
-       new Field(new String[] {
-            "O-O-O-O  ",
-            "|   |    ",
-            "O O-O-O O",
-            "| | | | |",
-            "O-O-O-O-O",
-            "| | | | |",
-            "O O-O-O O",
-            "    |   |",
-            "O-O-O-O-O"
-       });
-    } */
+        for (final GameObject gameObject : gameObjects) {
+            gameObject.setVisible(false);
+        }
+    }
 }
