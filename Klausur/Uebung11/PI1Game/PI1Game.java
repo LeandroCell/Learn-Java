@@ -20,9 +20,7 @@ abstract class PI1Game extends Game
         
         
         while(level.getActors().get(0).isVisible()) {
-            for (final Actor actor : level.getActors()) {
-                actor.act();
-            }
+            level.getActors().forEach(actor -> actor.act());
         }
     }
 }

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Diese Klasse repräsentiert ein Spielfeld. Ihr Konstruktor bekommt dieses als
@@ -44,11 +45,9 @@ class Field
     {
         this.field = field;
         
-        for (int y = 0; y < field.length; y += 2) {
-            for (int x = 0; x < field[y].length(); x += 2) {
-                new GameObject(x/2, y/2, 0, neighborhoodToFilename[getNeighborhood(x, y)]);
-            }
-        }
+        IntStream.iterate(0, y -> y < field.length, y -> y + 2)
+                .forEach(y -> IntStream.iterate(0, x -> x < field[y].length(), x -> x +2)
+                .forEach(x -> gameObjects.add(new GameObject(x / 2, y / 2, 0, neighborhoodToFilename[getNeighborhood(x, y)]))));
     }
     
     private char getCell(final int x, final int y)
@@ -63,22 +62,12 @@ class Field
     
     private int getNeighborhood(final int x, final int y)
     {
-        int neighborhood = 0;
+        int[][] neighbors = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
         
-        if (getCell(x+1, y) != ' ') {
-            neighborhood += 1;
-        }
-        if (getCell(x, y+1) != ' ') {
-            neighborhood += 2;
-        }
-        if (getCell(x-1, y) != ' ') {
-            neighborhood += 4;
-        }
-        if (getCell(x, y-1) != ' ') {
-            neighborhood += 8;
-        }
-        
-        return neighborhood;
+        return IntStream.range(0, neighbors.length)
+                .filter(direction -> getCell(x + neighbors[direction][0], y + neighbors[direction][1]) != ' ')
+                .map(direction -> 1 << direction)
+                .reduce(0, (a, b) -> a | b);
     }
     
     boolean hasNeighbor(final int x, final int y, final int direction) 

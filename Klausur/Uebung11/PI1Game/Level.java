@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.stream.Stream;
 
 /**
  * Diese Klasse definiert <Zusammenfassung ergänzen>
@@ -26,14 +27,9 @@ class Level
 
     Level(final String fileName)
     {
-        final List<String> lines = new ArrayList<String>();
-        try (final InputStream input = Game.Jar.getInputStream(fileName);
-             final Reader reader = new InputStreamReader(input);
-             final BufferedReader stream = new BufferedReader(reader)) {
-            String line;
-            while ((line = stream.readLine()) != null) {
-                lines.add(line);
-            }
+        final List<String> lines;
+        try (final BufferedReader stream = new BufferedReader(new InputStreamReader(Game.Jar.getInputStream(fileName)))) {
+            lines = stream.lines().toList();
         }
         catch (final FileNotFoundException e) {
             throw new IllegalArgumentException("Level '" + fileName 
