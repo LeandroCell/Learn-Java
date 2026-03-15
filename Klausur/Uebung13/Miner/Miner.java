@@ -20,7 +20,10 @@ class Miner
     private final GameObject miner;
 
     // Hier weitere Attribute, falls ihr welche benötigt
-
+    private final List<Integer> rotations = new ArrayList<>();
+    private int nextStep = 0;
+    private boolean readable = true;
+    
     /**
      * Konstruktor der Klasse Miner.
      * @param miner Die gesteuerte Figur.
@@ -35,6 +38,19 @@ class Miner
         this.miner = miner;
 
         // Datei einlesen
+        try {
+            Scanner scanner = new Scanner(new File(filename));
+            
+            while (scanner.hasNextInt()) {
+                int rotation = scanner.nextInt();
+                rotations.add(rotation);
+            }
+            scanner.close();
+        }
+        catch(FileNotFoundException e) {
+            System.out.println("Datei :" + filename + " nicht gefunden");
+            readable = false;
+        }
     }
 
     /**
@@ -51,7 +67,16 @@ class Miner
      */
     boolean act()
     {
-        return false; // Ersetzen
+        if (!readable) {
+            return false;
+        }
+        if (nextStep < rotations.size()) {
+            int rotation = rotations.get(nextStep);
+            miner.setRotation(rotation);
+            ++nextStep;
+            return true;
+        }
+        return false;
     }
 
     /**
