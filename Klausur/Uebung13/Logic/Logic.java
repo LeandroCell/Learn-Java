@@ -41,11 +41,65 @@ class Logic
             throw new IllegalArgumentException("Unerwartetes Zeichen '" + (char)(int) text.peek() + "'");
         }
     }
-
+    
+    /*
+     * or = and , { "|" , and };
+     */
     private static boolean or(final Queue<Integer> text)
     {
-        return false; // Ersetzen
+        boolean value = and(text);
+        
+        while (text.peek() == (int) '|') {
+            text.remove();
+            value = value | and(text);
+        }
+        return value;
     }
 
     // Weitere Methoden
+    private static boolean and(final Queue<Integer> text)
+    {
+        boolean value = val(text);
+        
+        while (text.peek() == (int) '&') {
+            text.remove();
+            value = value & val(text);
+        }
+        return value;
+    }
+    
+    private static boolean val(final Queue<Integer> text)
+    {
+        if (text.peek() == null) {
+            throw new IllegalArgumentException("Unerwartetes Ende");
+        }
+        
+        if (text.peek() == 't') {
+            text.remove();
+            return true;
+        }
+        else if (text.peek() == 'f') {
+            text.remove();
+            return false;
+        }
+        else if (text.peek() == '!') {
+            text.remove();
+            return !val(text);
+        }
+        else if (text.peek() == '(') {
+            text.remove();
+            final boolean value = or(text);
+        
+            if (text.peek() == ')') {
+                text.remove();
+                return value;
+            }
+            else {
+                throw new IllegalArgumentException("')' erwartet");
+            }
+        }
+        else {
+            throw new IllegalArgumentException("kein erwartetes Zeichen '" + text.peek() + "'");
+        }
+    }
 }
